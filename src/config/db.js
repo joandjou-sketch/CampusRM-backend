@@ -2,18 +2,23 @@
 
 const mongoose = require('mongoose');
 
-/**
- * Connects to MongoDB using MONGO_URI from environment.
- * Exits the process on connection failure.
- */
+let cached = global._mongoose;
+if (!cached) {
+  cached = global._mongoose = { conn: null, promise: null };
+}
+
 async function connectDB() {
-  try {
-    const conn = await mongoose.connect(process.env.MONGO_URI);
-    console.log(`MongoDB connected: ${conn.connection.host}`);
-  } catch (err) {
-    console.error(`MongoDB connection error: ${err.message}`);
-    process.exit(1);
+  if (cached.conn) {
+    return cached.conn;
   }
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(process.env.MONGO_URI).then((mongooseInstance) => {
+      console.log(`MongoDB connected: ${mongooseInstance.connection.host}`);
+      return mongooseInstance;
+    });
+  }
+  cached.conn = await cached.promise;
+  return cached.conn;
 }
 
 module.exports = connectDB;
