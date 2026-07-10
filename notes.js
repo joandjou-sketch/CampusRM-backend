@@ -1,5 +1,0 @@
-2026-07-10 00:58:57.560 [error] [ErrorHandler] MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
-    at Timeout.<anonymous> (/var/task/node_modules/mongoose/lib/drivers/node-mongodb-native/collection.js:187:23)
-    at listOnTimeout (node:internal/timers:605:17)
-    at process.processTimers (node:internal/timers:541:7)
-
